@@ -1,50 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:twenty_forty_eight/game.dart';
-
-part 'game_page.g.dart';
-
-enum Direction {
-  up,
-  down,
-  left,
-  right;
-}
-
-@riverpod
-Map<int, int> defaultTileMap(Ref ref) {
-  final tileMap = {
-    0: 0,
-    1: 0,
-    2: 0,
-    3: 0,
-    4: 0,
-    5: 0,
-    6: 0,
-    7: 0,
-    8: 0,
-    9: 0,
-    10: 0,
-    11: 0,
-    12: 0,
-    13: 0,
-    14: 0,
-    15: 0,
-    16: 0,
-  };
-
-  return tileMap;
-}
-
-final gameProvider = Provider.autoDispose<Game>((ref) {
-  return Game(
-    name: 'BJC  News',
-    tileMap: ref.watch(defaultTileMapProvider),
-    score: 0,
-  );
-});
+import 'package:twenty_forty_eight/game_controller.dart';
+import 'package:twenty_forty_eight/game_state.dart';
 
 class GameHomePage extends StatefulWidget {
   const GameHomePage({super.key, required this.title});
@@ -132,8 +90,8 @@ class InstructionsRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 32.0),
+    return const Padding(
+      padding: EdgeInsets.symmetric(vertical: 32.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -145,25 +103,32 @@ class InstructionsRow extends StatelessWidget {
   }
 }
 
-class GameGrid extends StatelessWidget {
+class GameGrid extends ConsumerWidget {
   const GameGrid({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    GameState game = ref.watch(gameProvider);
     return Focus(
       autofocus: true,
       onKeyEvent: (node, event) {
         // print("Event: ${event.runtimeType}");
+        Direction direction = Direction.up; // Is this bad practice?
         if (event.runtimeType == KeyUpEvent) {
           if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
             print("🟦 Got arrow Up!");
+            direction = Direction.up;
           } else if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
             print("🟦 Got arrow Down!");
+            direction = Direction.down;
           } else if (event.logicalKey == LogicalKeyboardKey.arrowLeft) {
             print("🟦 Got arrow Left!");
+            direction = Direction.left;
           } else if (event.logicalKey == LogicalKeyboardKey.arrowRight) {
             print("🟦 Got arrow Right!");
+            direction = Direction.right;
           }
+          ref.read(gameProvider.notifier).handleSwipe(direction);
         }
         return KeyEventResult.handled;
       },
@@ -176,9 +141,11 @@ class GameGrid extends StatelessWidget {
           if ((details.primaryVelocity ?? 0) > sensitivity) {
             // Right Swipe
             print("✅ Got Swipe Right");
+            ref.read(gameProvider.notifier).handleSwipe(Direction.right);
           } else if ((details.primaryVelocity ?? 0) < -sensitivity) {
             // Left Swipe
             print("✅ Got Swipe Left");
+            ref.read(gameProvider.notifier).handleSwipe(Direction.left);
           }
         },
         onVerticalDragEnd: (details) {
@@ -186,9 +153,11 @@ class GameGrid extends StatelessWidget {
           if ((details.primaryVelocity ?? 0) > sensitivity) {
             // Down Swipe
             print("✅ Got Swipe Down");
+            ref.read(gameProvider.notifier).handleSwipe(Direction.down);
           } else if ((details.primaryVelocity ?? 0) < -sensitivity) {
             // Up Swipe
             print("✅ Got Swipe Up");
+            ref.read(gameProvider.notifier).handleSwipe(Direction.up);
           }
         },
         child: Container(
@@ -205,6 +174,7 @@ class GameGrid extends StatelessWidget {
               children: List.generate(
                 16,
                 (index) {
+                  int? value = game.tileMap[index];
                   return Padding(
                     padding: const EdgeInsets.all(4.0),
                     child: Container(
@@ -213,7 +183,16 @@ class GameGrid extends StatelessWidget {
                         borderRadius: BorderRadius.circular(8.0),
                       ),
                       child: Center(
-                        child: Text('$index'),
+                        child: Column(
+                          children: [
+                            Text('$index'),
+                            if (value != null)
+                              Text(
+                                '$value',
+                                style: Theme.of(context).textTheme.displayLarge,
+                              ),
+                          ],
+                        ),
                       ),
                     ),
                   );

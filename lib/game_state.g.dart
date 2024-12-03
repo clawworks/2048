@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'game.dart';
+part of 'game_state.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
@@ -9,7 +9,7 @@ part of 'game.dart';
 _$GameImpl _$$GameImplFromJson(Map<String, dynamic> json) => _$GameImpl(
       name: json['name'] as String,
       tileMap: (json['tileMap'] as Map<String, dynamic>).map(
-        (k, e) => MapEntry(int.parse(k), (e as num).toInt()),
+        (k, e) => MapEntry(int.parse(k), (e as num?)?.toInt()),
       ),
       score: (json['score'] as num).toInt(),
     );
