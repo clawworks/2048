@@ -46,16 +46,17 @@ class Game extends _$Game {
 
   void addNewTile() {
     Map<int, int?> tileMap = {...state.tileMap};
-    // Todo add 2 to random empty tile
     bool gameOver = false;
     final emptyKeys = _emptyTiles();
     print("Empty Keys: $emptyKeys");
     if (emptyKeys.isNotEmpty) {
       final random = Random();
       final index = emptyKeys[random.nextInt(emptyKeys.length)];
+      final value = random.nextDouble() < 0.95 ? 2 : 4;
+      // TODO make this random value based on score. 2s, 4s, 8s +
 
-      print("🟧 Adding new tile at index $index");
-      tileMap[index] = 2;
+      print("🟧 Adding new $value tile at index $index");
+      tileMap[index] = value;
     } else {
       // Game is over! There are no more empty tiles
       // TODO handle end game
