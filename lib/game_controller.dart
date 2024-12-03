@@ -15,13 +15,18 @@ enum Direction {
 
 @riverpod
 class Game extends _$Game {
-  @override
-  GameState build() {
+  GameState _newGameState() {
     return GameState(
       name: 'BJC  News',
       tileMap: ref.watch(defaultTileMapProvider),
       score: 0,
+      gameIsOver: false,
     );
+  }
+
+  @override
+  GameState build() {
+    return _newGameState();
   }
 
   void handleSwipe(Direction direction) {
@@ -40,28 +45,31 @@ class Game extends _$Game {
   }
 
   void addNewTile() {
-    print("🟧 Adding new tile...");
     Map<int, int?> tileMap = {...state.tileMap};
     // Todo add 2 to random empty tile
+    bool gameOver = false;
     final emptyKeys = _emptyTiles();
     print("Empty Keys: $emptyKeys");
     if (emptyKeys.isNotEmpty) {
       final random = Random();
       final index = emptyKeys[random.nextInt(emptyKeys.length)];
 
+      print("🟧 Adding new tile at index $index");
       tileMap[index] = 2;
     } else {
       // Game is over! There are no more empty tiles
       // TODO handle end game
+      gameOver = true;
     }
-    state = state.copyWith(tileMap: tileMap);
+    state = state.copyWith(tileMap: tileMap, gameIsOver: gameOver);
   }
 
   List<int> _emptyTiles() {
     return state.tileMap.keys.where((i) => state.tileMap[i] == null).toList();
-    // .map<int, int?>((int key, int? value) => value == null)
-    // .keys
-    // .toList();
+  }
+
+  void startNewGame() {
+    ref.invalidateSelf();
   }
 }
 
@@ -84,7 +92,6 @@ Map<int, int?> defaultTileMap(Ref ref) {
     13: null,
     14: null,
     15: null,
-    16: null,
   };
 
   return tileMap;

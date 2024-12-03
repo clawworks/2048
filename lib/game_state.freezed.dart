@@ -23,6 +23,7 @@ mixin _$GameState {
   String get name => throw _privateConstructorUsedError;
   Map<int, int?> get tileMap => throw _privateConstructorUsedError;
   int get score => throw _privateConstructorUsedError;
+  bool get gameIsOver => throw _privateConstructorUsedError;
 
   /// Serializes this GameState to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -39,7 +40,7 @@ abstract class $GameStateCopyWith<$Res> {
   factory $GameStateCopyWith(GameState value, $Res Function(GameState) then) =
       _$GameStateCopyWithImpl<$Res, GameState>;
   @useResult
-  $Res call({String name, Map<int, int?> tileMap, int score});
+  $Res call({String name, Map<int, int?> tileMap, int score, bool gameIsOver});
 }
 
 /// @nodoc
@@ -60,6 +61,7 @@ class _$GameStateCopyWithImpl<$Res, $Val extends GameState>
     Object? name = null,
     Object? tileMap = null,
     Object? score = null,
+    Object? gameIsOver = null,
   }) {
     return _then(_value.copyWith(
       name: null == name
@@ -74,6 +76,10 @@ class _$GameStateCopyWithImpl<$Res, $Val extends GameState>
           ? _value.score
           : score // ignore: cast_nullable_to_non_nullable
               as int,
+      gameIsOver: null == gameIsOver
+          ? _value.gameIsOver
+          : gameIsOver // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -85,7 +91,7 @@ abstract class _$$GameImplCopyWith<$Res> implements $GameStateCopyWith<$Res> {
       __$$GameImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String name, Map<int, int?> tileMap, int score});
+  $Res call({String name, Map<int, int?> tileMap, int score, bool gameIsOver});
 }
 
 /// @nodoc
@@ -103,6 +109,7 @@ class __$$GameImplCopyWithImpl<$Res>
     Object? name = null,
     Object? tileMap = null,
     Object? score = null,
+    Object? gameIsOver = null,
   }) {
     return _then(_$GameImpl(
       name: null == name
@@ -117,6 +124,10 @@ class __$$GameImplCopyWithImpl<$Res>
           ? _value.score
           : score // ignore: cast_nullable_to_non_nullable
               as int,
+      gameIsOver: null == gameIsOver
+          ? _value.gameIsOver
+          : gameIsOver // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -127,7 +138,8 @@ class _$GameImpl implements _Game {
   const _$GameImpl(
       {required this.name,
       required final Map<int, int?> tileMap,
-      required this.score})
+      required this.score,
+      required this.gameIsOver})
       : _tileMap = tileMap;
 
   factory _$GameImpl.fromJson(Map<String, dynamic> json) =>
@@ -145,10 +157,12 @@ class _$GameImpl implements _Game {
 
   @override
   final int score;
+  @override
+  final bool gameIsOver;
 
   @override
   String toString() {
-    return 'GameState(name: $name, tileMap: $tileMap, score: $score)';
+    return 'GameState(name: $name, tileMap: $tileMap, score: $score, gameIsOver: $gameIsOver)';
   }
 
   @override
@@ -158,13 +172,15 @@ class _$GameImpl implements _Game {
             other is _$GameImpl &&
             (identical(other.name, name) || other.name == name) &&
             const DeepCollectionEquality().equals(other._tileMap, _tileMap) &&
-            (identical(other.score, score) || other.score == score));
+            (identical(other.score, score) || other.score == score) &&
+            (identical(other.gameIsOver, gameIsOver) ||
+                other.gameIsOver == gameIsOver));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
-      runtimeType, name, const DeepCollectionEquality().hash(_tileMap), score);
+  int get hashCode => Object.hash(runtimeType, name,
+      const DeepCollectionEquality().hash(_tileMap), score, gameIsOver);
 
   /// Create a copy of GameState
   /// with the given fields replaced by the non-null parameter values.
@@ -186,7 +202,8 @@ abstract class _Game implements GameState {
   const factory _Game(
       {required final String name,
       required final Map<int, int?> tileMap,
-      required final int score}) = _$GameImpl;
+      required final int score,
+      required final bool gameIsOver}) = _$GameImpl;
 
   factory _Game.fromJson(Map<String, dynamic> json) = _$GameImpl.fromJson;
 
@@ -196,6 +213,8 @@ abstract class _Game implements GameState {
   Map<int, int?> get tileMap;
   @override
   int get score;
+  @override
+  bool get gameIsOver;
 
   /// Create a copy of GameState
   /// with the given fields replaced by the non-null parameter values.

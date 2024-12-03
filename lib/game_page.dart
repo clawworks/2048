@@ -85,18 +85,25 @@ class TitleBar extends StatelessWidget {
   }
 }
 
-class InstructionsRow extends StatelessWidget {
+class InstructionsRow extends ConsumerWidget {
   const InstructionsRow({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.symmetric(vertical: 32.0),
+  Widget build(BuildContext context, WidgetRef ref) {
+    final GameState game = ref.watch(gameProvider);
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 32.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Flexible(child: Text('Join the numbers and get to the 2048 tile!')),
-          Text('New Game'), // TODO
+          const Flexible(
+              child: Text('Join the numbers and get to the 2048 tile!')),
+          ElevatedButton(
+            onPressed: () {
+              ref.read(gameProvider.notifier).startNewGame();
+            },
+            child: const Text('New Game'),
+          ), // TODO
         ],
       ),
     );
@@ -160,46 +167,56 @@ class GameGrid extends ConsumerWidget {
             ref.read(gameProvider.notifier).handleSwipe(Direction.up);
           }
         },
-        child: Container(
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surfaceContainerHighest,
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: GridView.count(
-              shrinkWrap: true,
-              crossAxisCount: 4,
-              physics: const NeverScrollableScrollPhysics(),
-              children: List.generate(
-                16,
-                (index) {
-                  int? value = game.tileMap[index];
-                  return Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.surfaceDim,
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      child: Center(
-                        child: Column(
-                          children: [
-                            Text('$index'),
-                            if (value != null)
-                              Text(
-                                '$value',
-                                style: Theme.of(context).textTheme.displayLarge,
-                              ),
-                          ],
+        child: Stack(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: GridView.count(
+                  shrinkWrap: true,
+                  crossAxisCount: 4,
+                  physics: const NeverScrollableScrollPhysics(),
+                  children: List.generate(
+                    16,
+                    (index) {
+                      int? value = game.tileMap[index];
+                      return Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.surfaceDim,
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          child: Center(
+                            child: Column(
+                              children: [
+                                Text('$index'),
+                                if (value != null)
+                                  Text(
+                                    '$value',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .displayLarge,
+                                  ),
+                              ],
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                  );
-                },
+                      );
+                    },
+                  ),
+                ),
               ),
             ),
-          ),
+            Visibility(
+              visible: game.gameIsOver,
+              child: Center(child: Text('Game Over!')),
+            ),
+          ],
         ),
       ),
     );

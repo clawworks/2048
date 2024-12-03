@@ -12,6 +12,7 @@ class GameState with _$GameState {
     required String name,
     required Map<int, int?> tileMap,
     required int score,
+    required bool gameIsOver,
   }) = _Game;
 
   factory GameState.fromJson(Map<String, Object?> json) =>

@@ -23,7 +23,7 @@ final defaultTileMapProvider = AutoDisposeProvider<Map<int, int?>>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef DefaultTileMapRef = AutoDisposeProviderRef<Map<int, int?>>;
-String _$gameHash() => r'553a7beaea2536dffbc09036b5fce8157cdf97aa';
+String _$gameHash() => r'cdbaccf019a5b750c1283e7198543ac04c7a55f3';
 
 /// See also [Game].
 @ProviderFor(Game)
