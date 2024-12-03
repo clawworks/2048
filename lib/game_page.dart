@@ -90,7 +90,6 @@ class InstructionsRow extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final GameState game = ref.watch(gameProvider);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 32.0),
       child: Row(
@@ -103,7 +102,7 @@ class InstructionsRow extends ConsumerWidget {
               ref.read(gameProvider.notifier).startNewGame();
             },
             child: const Text('New Game'),
-          ), // TODO
+          ),
         ],
       ),
     );
@@ -168,6 +167,7 @@ class GameGrid extends ConsumerWidget {
           }
         },
         child: Stack(
+          // fit: StackFit.expand,
           children: [
             Container(
               decoration: BoxDecoration(
@@ -214,7 +214,75 @@ class GameGrid extends ConsumerWidget {
             ),
             Visibility(
               visible: game.gameIsOver,
-              child: Center(child: Text('Game Over!')),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Theme.of(context)
+                      .colorScheme
+                      .surfaceContainerLowest
+                      .withOpacity(0.4),
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                // height: 600,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    GridView.count(
+                      shrinkWrap: true,
+                      crossAxisCount: 4,
+                      physics: const NeverScrollableScrollPhysics(),
+                      children: List.generate(
+                        16,
+                        (index) {
+                          return Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Text(
+                            'Game Over!',
+                            style: Theme.of(context).textTheme.displayLarge,
+                          ),
+                          const SizedBox(height: 40.0),
+                          ElevatedButton(
+                            onPressed: () {
+                              ref.read(gameProvider.notifier).startNewGame();
+                            },
+                            child: const Text('Try Again!'),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                // child: Center(
+                //   child: Column(
+                //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                //     children: [
+                //       const SizedBox(height: 40.0),
+                //       Text(
+                //         'Game Over!',
+                //         style: Theme.of(context).textTheme.headlineLarge,
+                //       ),
+                //       ElevatedButton(
+                //         onPressed: () {
+                //           ref.read(gameProvider.notifier).startNewGame();
+                //         },
+                //         child: const Text('Try Again!'),
+                //       ),
+                //     ],
+                //   ),
+                // ),
+              ),
             ),
           ],
         ),
