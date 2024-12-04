@@ -37,11 +37,14 @@ class Game extends _$Game {
           // _handleSwipeUp();
           _combineColumnUp(i);
         case Direction.down:
-          _handleSwipeDown();
+          _combineColumnDown(i);
+        // _handleSwipeDown();
         case Direction.left:
-          _handleSwipeLeft();
+          _combineRowLeft(i);
+        // _handleSwipeLeft();
         case Direction.right:
-          _handleSwipeRight();
+          _combineRowRight(i);
+        // _handleSwipeRight();
       }
     }
 
@@ -57,16 +60,49 @@ class Game extends _$Game {
     _setNumbersInColumn(col, newNumbers);
   }
 
+  void _combineColumnDown(int col) {
+    print("Combining Column $col down");
+    List<int> numbers = _getNumbersInColumn(col).reversed.toList();
+    List<int?> newNumbers = _combineNumbers(numbers).reversed.toList();
+    _setNumbersInColumn(col, newNumbers);
+  }
+
+  void _combineRowLeft(int row) {
+    print("Combining Row $row up");
+    List<int> numbers = _getNumbersInRow(row);
+    List<int?> newNumbers = _combineNumbers(numbers);
+    _setNumbersInRow(row, newNumbers);
+  }
+
+  void _combineRowRight(int row) {
+    print("Combining Row $row down");
+    List<int> numbers = _getNumbersInRow(row).reversed.toList();
+    List<int?> newNumbers = _combineNumbers(numbers).reversed.toList();
+    _setNumbersInRow(row, newNumbers);
+  }
+
   List<int> _getNumbersInColumn(int col) {
-    List<int> nums = [];
+    List<int> numbers = [];
     for (int i = 0; i < 4; i++) {
       int index = col + (i * 4);
       int? value = state.tileMap[index];
       if (value != null) {
-        nums.add(value);
+        numbers.add(value);
       }
     }
-    return nums;
+    return numbers;
+  }
+
+  List<int> _getNumbersInRow(int row) {
+    List<int> numbers = [];
+    for (int i = 0; i < 4; i++) {
+      int index = (row * 4) + i;
+      int? value = state.tileMap[index];
+      if (value != null) {
+        numbers.add(value);
+      }
+    }
+    return numbers;
   }
 
   void _setNumbersInColumn(int column, List<int?> numbers) {
@@ -79,23 +115,33 @@ class Game extends _$Game {
     state = state.copyWith(tileMap: newTileMap);
   }
 
-  List<int?> _combineNumbers(List<int> nums) {
+  void _setNumbersInRow(int row, List<int?> numbers) {
+    final newTileMap = {...state.tileMap};
+    for (int i = 0; i < 4; i++) {
+      // Could loop over numbers specifically
+      int index = (row * 4) + i;
+      newTileMap[index] = numbers.elementAtOrNull(i);
+    }
+    state = state.copyWith(tileMap: newTileMap);
+  }
+
+  List<int?> _combineNumbers(List<int> numbers) {
     final newNumbers = <int?>[];
     // int score = state.score;
-    while (nums.isNotEmpty) {
-      if (nums.length == 1) {
-        newNumbers.add(nums[0]);
-        nums.removeAt(0);
-      } else if (nums[0] == nums[1]) {
-        int sum = nums[0] + nums[1];
+    while (numbers.isNotEmpty) {
+      if (numbers.length == 1) {
+        newNumbers.add(numbers[0]);
+        numbers.removeAt(0);
+      } else if (numbers[0] == numbers[1]) {
+        int sum = numbers[0] + numbers[1];
         newNumbers.add(sum);
         // score += sum; // TODO add score for combined digits!
         // state.score += sum;
-        nums.removeAt(0);
-        nums.removeAt(0);
+        numbers.removeAt(0);
+        numbers.removeAt(0);
       } else {
-        newNumbers.add(nums[0]);
-        nums.removeAt(0);
+        newNumbers.add(numbers[0]);
+        numbers.removeAt(0);
       }
     }
     while (newNumbers.length < 4) {
@@ -104,29 +150,29 @@ class Game extends _$Game {
     return newNumbers;
   }
 
-  void _handleSwipeUp() {
-    print("Handle Swipe Up");
-    Map<int, int?> newTileMap = {...state.tileMap};
-    for (int i = 4; i < 16; i++) {
-      print("Checking tile $i");
-      int? tileValue = newTileMap[i];
-      if (tileValue != null) {
-        int? tileAboveValue = newTileMap[i - 4];
-        if (tileAboveValue != null) {
-          // Tile above has value, if it's the same combine
-          if (tileValue == tileAboveValue) {
-            newTileMap[i - 4] = tileValue + tileAboveValue;
-            newTileMap[i] = null;
-          }
-        } else {
-          // Tile above is null, move to it
-          newTileMap[i - 4] = tileValue;
-          newTileMap[i] = null;
-        }
-      }
-    }
-    state = state.copyWith(tileMap: newTileMap);
-  }
+  // void _handleSwipeUp() {
+  //   print("Handle Swipe Up");
+  //   Map<int, int?> newTileMap = {...state.tileMap};
+  //   for (int i = 4; i < 16; i++) {
+  //     print("Checking tile $i");
+  //     int? tileValue = newTileMap[i];
+  //     if (tileValue != null) {
+  //       int? tileAboveValue = newTileMap[i - 4];
+  //       if (tileAboveValue != null) {
+  //         // Tile above has value, if it's the same combine
+  //         if (tileValue == tileAboveValue) {
+  //           newTileMap[i - 4] = tileValue + tileAboveValue;
+  //           newTileMap[i] = null;
+  //         }
+  //       } else {
+  //         // Tile above is null, move to it
+  //         newTileMap[i - 4] = tileValue;
+  //         newTileMap[i] = null;
+  //       }
+  //     }
+  //   }
+  //   state = state.copyWith(tileMap: newTileMap);
+  // }
 
   void _handleSwipeDown() {
     print("Handle Swipe Down");
