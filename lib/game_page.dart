@@ -4,15 +4,24 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:twenty_forty_eight/game_controller.dart';
 import 'package:twenty_forty_eight/game_state.dart';
 
-class GameHomePage extends StatefulWidget {
+class GameHomePage extends ConsumerStatefulWidget {
   const GameHomePage({super.key, required this.title});
   final String title;
 
   @override
-  State<GameHomePage> createState() => _GameHomePageState();
+  ConsumerState<GameHomePage> createState() => _GameHomePageState();
 }
 
-class _GameHomePageState extends State<GameHomePage> {
+class _GameHomePageState extends ConsumerState<GameHomePage> {
+  @override
+  void initState() {
+    // if (ref.watch(gameProvider).gameIsOver) {
+    //   ref.read(gameProvider.notifier).startNewGame();
+    // }
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,11 +62,12 @@ class _GameHomePageState extends State<GameHomePage> {
   }
 }
 
-class TitleBar extends StatelessWidget {
+class TitleBar extends ConsumerWidget {
   const TitleBar({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    GameState game = ref.watch(gameProvider);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 32.0),
       child: Row(
@@ -74,7 +84,7 @@ class TitleBar extends StatelessWidget {
                 style: Theme.of(context).textTheme.headlineSmall,
               ),
               Text(
-                '0', // TODO
+                '${game.score}',
                 style: Theme.of(context).textTheme.headlineSmall,
               ),
             ],

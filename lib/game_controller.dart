@@ -15,13 +15,18 @@ enum Direction {
 
 @riverpod
 class Game extends _$Game {
+  int _score = 0;
+
   GameState _newGameState() {
-    return GameState(
+    GameState newGame = GameState(
       name: 'BJC  News',
       tileMap: ref.watch(defaultTileMapProvider),
       score: 0,
       gameIsOver: false,
     );
+    // addNewTile();
+    // addNewTile();
+    return newGame;
   }
 
   @override
@@ -34,19 +39,18 @@ class Game extends _$Game {
     for (int i = 0; i < 4; i++) {
       switch (direction) {
         case Direction.up:
-          // _handleSwipeUp();
           _combineColumnUp(i);
         case Direction.down:
           _combineColumnDown(i);
-        // _handleSwipeDown();
         case Direction.left:
           _combineRowLeft(i);
-        // _handleSwipeLeft();
         case Direction.right:
           _combineRowRight(i);
-        // _handleSwipeRight();
       }
     }
+    int newScore = state.score + _score;
+    state = state.copyWith(score: newScore);
+    _score = 0;
 
     if (_boardChanged(oldBoard)) {
       addNewTile();
@@ -135,7 +139,7 @@ class Game extends _$Game {
       } else if (numbers[0] == numbers[1]) {
         int sum = numbers[0] + numbers[1];
         newNumbers.add(sum);
-        // score += sum; // TODO add score for combined digits!
+        _score += sum; // TODO add score for combined digits!
         // state.score += sum;
         numbers.removeAt(0);
         numbers.removeAt(0);
@@ -150,50 +154,14 @@ class Game extends _$Game {
     return newNumbers;
   }
 
-  // void _handleSwipeUp() {
-  //   print("Handle Swipe Up");
-  //   Map<int, int?> newTileMap = {...state.tileMap};
-  //   for (int i = 4; i < 16; i++) {
-  //     print("Checking tile $i");
-  //     int? tileValue = newTileMap[i];
-  //     if (tileValue != null) {
-  //       int? tileAboveValue = newTileMap[i - 4];
-  //       if (tileAboveValue != null) {
-  //         // Tile above has value, if it's the same combine
-  //         if (tileValue == tileAboveValue) {
-  //           newTileMap[i - 4] = tileValue + tileAboveValue;
-  //           newTileMap[i] = null;
-  //         }
-  //       } else {
-  //         // Tile above is null, move to it
-  //         newTileMap[i - 4] = tileValue;
-  //         newTileMap[i] = null;
-  //       }
-  //     }
-  //   }
-  //   state = state.copyWith(tileMap: newTileMap);
-  // }
-
-  void _handleSwipeDown() {
-    print("Handle Swipe Down");
-  }
-
-  void _handleSwipeLeft() {
-    print("Handle Swipe Left");
-  }
-
-  void _handleSwipeRight() {
-    print("Handle Swipe Right");
-  }
-
   bool _boardChanged(Map<int, int?> oldBoard) {
     for (int i = 0; i < 16; i++) {
       if (oldBoard[i] != state.tileMap[i]) {
         return true;
       }
     }
-    return true; // TODO this should be false!
-    // return false;
+    // return true; // TODO this should be false!
+    return false;
   }
 
   void addNewTile() {
@@ -222,6 +190,8 @@ class Game extends _$Game {
 
   void startNewGame() {
     ref.invalidateSelf();
+    addNewTile();
+    addNewTile();
   }
 }
 
