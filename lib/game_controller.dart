@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flutter/material.dart' show Color, Colors;
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:twenty_forty_eight/game_state.dart';
@@ -217,4 +218,10 @@ Map<int, int?> defaultTileMap(Ref ref) {
   };
 
   return tileMap;
+}
+
+@riverpod
+Color tileColor(Ref ref, int? value) {
+  // if (value == null) return The
+  return Colors.green;
 }

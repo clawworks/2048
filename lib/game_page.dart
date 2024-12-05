@@ -194,29 +194,7 @@ class GameGrid extends ConsumerWidget {
                     16,
                     (index) {
                       int? value = game.tileMap[index];
-                      return Padding(
-                        padding: const EdgeInsets.all(4.0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.surfaceDim,
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                          child: Center(
-                            child: Column(
-                              children: [
-                                Text('$index'),
-                                if (value != null)
-                                  Text(
-                                    '$value',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .displayLarge,
-                                  ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      );
+                      return Tile(value: value);
                     },
                   ),
                 ),
@@ -295,6 +273,62 @@ class GameGrid extends ConsumerWidget {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class Tile extends StatelessWidget {
+  const Tile({
+    super.key,
+    required this.value,
+  });
+
+  final int? value;
+
+  @override
+  Widget build(BuildContext context) {
+    Color tileColor(int? value) {
+      if (value == null) {
+        return Theme.of(context).colorScheme.surfaceDim;
+      } else if (value == 2) {
+        return Theme.of(context).colorScheme.primaryContainer;
+      } else if (value == 4) {
+        return Theme.of(context).colorScheme.primary;
+      } else if (value == 8) {
+        return Theme.of(context).colorScheme.secondaryContainer;
+      } else if (value == 16) {
+        return Theme.of(context).colorScheme.secondary;
+      } else if (value == 32) {
+        return Theme.of(context).colorScheme.tertiaryContainer;
+      } else if (value == 64) {
+        return Theme.of(context).colorScheme.tertiary;
+      } else {
+        return Theme.of(context).colorScheme.surfaceDim;
+      }
+    }
+
+    return Padding(
+      padding: const EdgeInsets.all(4.0),
+      child: Container(
+        decoration: BoxDecoration(
+          color: tileColor(value),
+          // color: ref.watch(tileColorProvider(value)),
+          // color: Theme.of(context).colorScheme.surfaceDim,
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+        child: Center(
+          child: Column(
+            children: [
+              // Text('$index'),
+              if (value != null)
+                Text(
+                  '$value',
+                  style: Theme.of(context).textTheme.displayLarge,
+                ),
+            ],
+          ),
         ),
       ),
     );
