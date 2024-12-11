@@ -75,17 +75,17 @@ class TitleBar extends ConsumerWidget {
         children: [
           Text(
             '2048',
-            style: Theme.of(context).textTheme.displayMedium,
+            style: Theme.of(context).textTheme.displayLarge,
           ),
           Row(
             children: [
               Text(
                 'Score: ',
-                style: Theme.of(context).textTheme.headlineSmall,
+                style: Theme.of(context).textTheme.headlineMedium,
               ),
               Text(
                 '${game.score}',
-                style: Theme.of(context).textTheme.headlineSmall,
+                style: Theme.of(context).textTheme.headlineMedium,
               ),
             ],
           ),
@@ -105,13 +105,19 @@ class InstructionsRow extends ConsumerWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Flexible(
-              child: Text('Join the numbers and get to the 2048 tile!')),
+          Flexible(
+              child: Text(
+            'Join the numbers and get to the 2048 tile!',
+            style: Theme.of(context).textTheme.titleMedium,
+          )),
           ElevatedButton(
             onPressed: () {
               ref.read(gameProvider.notifier).startNewGame();
             },
-            child: const Text('New Game'),
+            child: Text(
+              'New Game',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
           ),
         ],
       ),
@@ -245,7 +251,10 @@ class GameGrid extends ConsumerWidget {
                             onPressed: () {
                               ref.read(gameProvider.notifier).startNewGame();
                             },
-                            child: const Text('Try Again!'),
+                            child: Text(
+                              'Try Again!',
+                              style: Theme.of(context).textTheme.titleLarge,
+                            ),
                           ),
                         ],
                       ),
@@ -294,7 +303,9 @@ class Tile extends StatelessWidget {
         return Theme.of(context).colorScheme.surfaceDim;
       } else if (value == 2) {
         return Theme.of(context).colorScheme.secondaryContainer;
+        return Theme.of(context).colorScheme.primaryFixed;
       } else if (value == 4) {
+        return Theme.of(context).colorScheme.primaryFixedDim;
         return Theme.of(context).colorScheme.primaryContainer;
       } else if (value == 8) {
         return Theme.of(context).colorScheme.primary;
@@ -304,8 +315,40 @@ class Tile extends StatelessWidget {
         return Theme.of(context).colorScheme.tertiaryContainer;
       } else if (value == 64) {
         return Theme.of(context).colorScheme.tertiary;
+      } else if (value == 128) {
+        // TODO
+        return Theme.of(context).colorScheme.tertiary;
+      } else if (value == 256) {
+        // TODO
+        return Theme.of(context).colorScheme.tertiary;
+      } else if (value == 512) {
+        // TODO
+        return Theme.of(context).colorScheme.tertiary;
+      } else if (value == 2048) {
+        // TODO
+        return Theme.of(context).colorScheme.tertiary;
       } else {
         return Theme.of(context).colorScheme.surfaceDim;
+      }
+    }
+
+    Color textColor(int? value) {
+      if (value == null) {
+        return Theme.of(context).colorScheme.onSurfaceVariant;
+      } else if (value == 2) {
+        return Theme.of(context).colorScheme.onSecondaryContainer;
+      } else if (value == 4) {
+        return Theme.of(context).colorScheme.onPrimaryContainer;
+      } else if (value == 8) {
+        return Theme.of(context).colorScheme.onPrimary;
+      } else if (value == 16) {
+        return Theme.of(context).colorScheme.onSecondary;
+      } else if (value == 32) {
+        return Theme.of(context).colorScheme.onTertiaryContainer;
+      } else if (value == 64) {
+        return Theme.of(context).colorScheme.onTertiary;
+      } else {
+        return Theme.of(context).colorScheme.onSurfaceVariant;
       }
     }
 
@@ -326,7 +369,10 @@ class Tile extends StatelessWidget {
               if (value != null)
                 Text(
                   '$value',
-                  style: Theme.of(context).textTheme.displayLarge,
+                  style: Theme.of(context)
+                      .textTheme
+                      .displayLarge
+                      ?.copyWith(color: textColor(value)),
                 ),
             ],
           ),
@@ -341,11 +387,12 @@ class Rules extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Row(
+    return Row(
       children: [
         Flexible(
           child: Text(
             'How to play: Use the Arrow Keys or Swipe to move the tiles, when two tiles of the same number touch they merge to one!',
+            style: Theme.of(context).textTheme.bodyLarge,
           ),
         ),
       ],
