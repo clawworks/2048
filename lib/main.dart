@@ -19,8 +19,12 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: '2048',
       theme: ThemeData(
+        // fontFamily: 'Titan_One',
+        // fontFamily: 'Jomhuria',
+        // fontFamily: 'Boogaloo',
+        fontFamily: 'Grandstander',
         colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.deepOrange,
+          seedColor: Colors.blueGrey,
           dynamicSchemeVariant: DynamicSchemeVariant.fidelity,
         ),
         useMaterial3: true,

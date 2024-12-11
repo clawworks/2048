@@ -293,11 +293,11 @@ class Tile extends StatelessWidget {
       if (value == null) {
         return Theme.of(context).colorScheme.surfaceDim;
       } else if (value == 2) {
-        return Theme.of(context).colorScheme.primaryContainer;
-      } else if (value == 4) {
-        return Theme.of(context).colorScheme.primary;
-      } else if (value == 8) {
         return Theme.of(context).colorScheme.secondaryContainer;
+      } else if (value == 4) {
+        return Theme.of(context).colorScheme.primaryContainer;
+      } else if (value == 8) {
+        return Theme.of(context).colorScheme.primary;
       } else if (value == 16) {
         return Theme.of(context).colorScheme.secondary;
       } else if (value == 32) {
@@ -320,6 +320,7 @@ class Tile extends StatelessWidget {
         ),
         child: Center(
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               // Text('$index'),
               if (value != null)
